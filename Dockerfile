@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 # Install Python
-RUN echo "@testing http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
   && apk add --update \
               bash \
               build-base \
@@ -10,11 +10,11 @@ RUN echo "@testing http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/
               musl \
               nodejs \
               postgresql-dev \
-              py-pip \
+              py2-pip \
               python \
               python-dev \
               redis \
-              runit@testing \
+              runit \
   && pip install --upgrade pip \
   && npm install -g bower less \
   && rm /var/cache/apk/*
@@ -50,7 +50,10 @@ RUN rm -rf /etc/service \
 RUN cd /src/ \
   && bower install --allow-root \
   && python manage.py assets build \
+  && chown -R doorman:doorman * \
   && mkdir /var/log/doorman/ \
   && chown doorman:doorman /var/log/doorman/
+
+EXPOSE 5000
 
 CMD ["runsvdir", "/etc/service"]
