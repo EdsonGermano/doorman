@@ -50,7 +50,10 @@ RUN rm -rf /etc/service \
 RUN cd /src/ \
   && bower install --allow-root \
   && python manage.py assets build \
+  && chown -R doorman:doorman * \
   && mkdir /var/log/doorman/ \
   && chown doorman:doorman /var/log/doorman/
+
+EXPOSE 5000
 
 CMD ["runsvdir", "/etc/service"]
